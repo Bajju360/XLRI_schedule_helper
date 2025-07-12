@@ -6,18 +6,23 @@ import re
 st.header('Hemanth')
 today = datetime.now().strftime("%d-%m-%Y")
 
+# Get the directory where this script is located
+import os
+script_dir = os.path.dirname(os.path.abspath(__file__))
+csv_path = os.path.join(script_dir, "schedule_hemanth.csv")
+
 # Initialize session state for dataframe
 if 'my_dataframe' not in st.session_state:
     try:
-        st.session_state.my_dataframe = pd.read_csv("schedule_hemanth.csv", header=None)
+        st.session_state.my_dataframe = pd.read_csv(csv_path, header=None)
     except FileNotFoundError:
-        st.error("CSV file 'schedule_hemanth.csv' not found. Please make sure the file exists in the same directory.")
+        st.error(f"CSV file 'schedule_hemanth.csv' not found at {csv_path}. Please make sure the file exists in the same directory as the script.")
         st.stop()
     except Exception as e:
         st.error(f"Error reading CSV file: {str(e)}")
         st.stop()
 else:
-    st.session_state.my_dataframe = pd.read_csv("schedule_hemanth.csv", header=None)
+    st.session_state.my_dataframe = pd.read_csv(csv_path, header=None)
 
 my_dataframe = st.session_state.my_dataframe
 
@@ -261,7 +266,7 @@ with st.form("add_entry_form"):
         
         # Save the updated dataframe back to CSV file
         try:
-            my_dataframe.to_csv("schedule_hemanth.csv", index=False, header=False)
+            my_dataframe.to_csv(csv_path, index=False, header=False)
             st.success(f"Added new entry: {selected_date} {selected_time} - {selected_topic}")
             
             # Re-parse the data after adding entry
@@ -307,7 +312,7 @@ if st.button("Add Entries"):
         
         # Save the updated dataframe back to CSV file
         try:
-            my_dataframe.to_csv("schedule_hemanth.csv", index=False, header=False)
+            my_dataframe.to_csv(csv_path, index=False, header=False)
             st.success(f"Added {len(lines)} new entries successfully!")
             
             # Re-parse the data after adding entries
